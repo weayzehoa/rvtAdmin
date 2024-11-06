@@ -1,0 +1,833 @@
+openapi: 3.0.0
+info:
+  title: 'iCarry.me API 文件'
+  description: 'iCarry.me API 文件.'
+  contact:
+    email: roger@icarry.me
+  license:
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: 1.0.0
+servers:
+  -
+    url: ''
+    description: 目前伺服器
+  -
+    url: 'https://dev-api.icarry.me'
+    description: iCarry開發用測試機
+paths:
+  /web/v1/curation:
+    get:
+      tags:
+        - 前台-首頁及分類策展
+      summary: 取得首頁及分類策展資料
+      description: '取得首頁及分類策展資料，請使用 cate 參數，home 代表首頁，category 代表分類'
+      operationId: getCurationList
+      parameters:
+        -
+          name: cate
+          in: query
+          description: 策展類別
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Success, 取得首頁及分類策展資料'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurationSuccess'
+        400:
+          description: 'Failure, 參數錯誤'
+  '/web/v1/curation/{id}':
+    get:
+      tags:
+        - 前台-首頁及分類策展
+      summary: 取得首頁或分類策展項目
+      description: '透過 id 取得首頁或分類策展項目'
+      operationId: getCurationItem
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'The id of the Curation'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: 'The task item'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/curation'
+        404:
+          description: '404 data not found'
+components:
+  schemas:
+    CurationSuccess:
+      title: 前台-策展清單列表欄位說明
+      properties:
+        message:
+          description: 回應訊息
+          type: string
+          format: string
+          example: success
+        totalCount:
+          description: 資料筆數總計
+          type: integer
+          format: integer
+          example: '10'
+        data:
+          description: 資料內容
+          type: array
+          items:
+            $ref: '#/components/schemas/curation'
+      type: object
+    curation:
+      title: 前台-策展欄位說明
+      properties:
+        id:
+          description: 'The id of the curation table'
+          type: integer
+          format: int64
+          example: 1
+        category:
+          description: '策展類別, 首頁策展 = home, 分類策展 = category'
+          type: string
+          format: string
+          example: home
+        main_title:
+          description: 大標題
+          type: string
+          format: string
+          example: 最受歡迎的台灣伴手禮品牌
+        show_main_title:
+          description: '大標題顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '1'
+        sub_title:
+          description: 小標題
+          type: string
+          format: string
+          example: 台灣必買十大伴手禮精選
+        show_sub_title:
+          description: '小標題顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '0'
+        main_title_background:
+          description: 大標題背景顏色
+          type: string
+          format: string
+          example: '#FF00FFFF'
+        show_main_title_background:
+          description: '大標題背景顏色顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '0'
+        background_color:
+          description: 策展版型背景顏色
+          type: string
+          format: string
+          example: '#CCCCCCFF'
+        show_background_color:
+          description: '策展版型背景顏色顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '0'
+        background_image:
+          description: 策展版型背景圖片
+          type: string
+          format: string
+          example: 'https://dev-cdn.icarry.me/upload/curation/background_image_1_1620880149.png'
+        show_background_image:
+          description: '策展版型背景圖片顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '0'
+        columns:
+          description: '策展版型欄數 1-6'
+          type: integer
+          format: integer
+          example: '4'
+        rows:
+          description: '策展版型列數 1-2 (宮格版型用)'
+          type: integer
+          format: integer
+          example: '2'
+        caption:
+          description: 說明簡介
+          type: string
+          format: text
+          example: 說明簡介....
+        type:
+          description: '版型種類 (標頭 header, 圖片 image, 活動 event, 宮格 block, 宮格無字 nowordblock, 品牌 vendor, 產品 product)'
+          type: string
+          format: string
+          example: product
+        url:
+          description: 連結
+          type: string
+          format: string
+          example: 'https://icarry.me'
+        show_url:
+          description: '連結顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '1'
+        start_time:
+          description: 策展開始時間
+          type: string
+          format: datetime
+          example: '2020-04-17 00:00:30'
+        end_time:
+          description: 策展結束時間
+          type: string
+          format: datetime
+          example: '2099-05-11 00:00:30'
+        is_on:
+          description: '版型開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '1'
+        sort:
+          description: 版型排序
+          type: number
+          format: float
+          example: '1'
+        products:
+          description: '產品資料 (type = product 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationProducts'
+        vendors:
+          description: '品牌資料 (type = vendor 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationVendors'
+        images:
+          description: '圖片版型資料 (type = image 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationImages'
+        blocks:
+          description: '宮格版型資料 (type = block 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationImages'
+        nowordblocks:
+          description: '宮格(無字)版型資料 (type = nowordblock 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationNoWordBlocks'
+        events:
+          description: '活動版型資料 (type = event 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationImages'
+      type: object
+    CurationLangs:
+      title: 前台-策展語言欄位說明
+      properties:
+        curation_id:
+          description: 'The id of the curation table'
+          type: integer
+          format: int64
+          example: 1
+        lang:
+          description: '語言代號 (en,jp,kr,th)'
+          type: string
+          format: string
+          example: en
+        main_title:
+          description: 大標題
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+        sub_title:
+          description: 小標題
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+        caption:
+          description: 簡介說明
+          type: string
+          format: text
+          example: 'Caption description...'
+      type: object
+    CurationProducts:
+      title: 前台-策展-產品版型欄位說明
+      properties:
+        id:
+          description: 'The id of the curation_products table'
+          type: integer
+          format: int64
+          example: 1
+        product_id:
+          description: 'The id of the products table'
+          type: integer
+          format: int64
+          example: 1
+        curation_id:
+          description: 'The id of the curation table'
+          type: integer
+          format: int64
+          example: 1
+        vendor_name:
+          description: 商家名稱
+          type: string
+          format: string
+          example: 過海製麵所
+        name:
+          description: 產品名稱
+          type: string
+          format: string
+          example: 曾拌麵-胡蔴醬香(細麵，全素)
+        curation_text_top:
+          description: 上標文字
+          type: string
+          format: string
+          example: 'Jei De'
+        curation_text_bottom:
+          description: 下標文字
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+        fake_price:
+          description: 建議售價
+          type: integer
+          format: integer
+          example: '168'
+        price:
+          description: 售價
+          type: integer
+          format: integer
+          example: '134'
+        sort:
+          description: 產品排序
+          type: number
+          format: float
+          example: '1'
+        status:
+          description: '產品狀態 (只會出現 1 上架中, 其餘排除)'
+          type: boolean
+          format: boolean
+          example: '1'
+        langs:
+          description: 語言資料
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationProductLangs'
+        image:
+          description: 圖片資料
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationProductImage'
+      type: object
+    CurationProductLangs:
+      title: 前台-策展-產品版型語言欄位說明
+      properties:
+        product_id:
+          description: 'The id of the products table'
+          type: integer
+          format: int64
+          example: 1
+        lang:
+          description: '語言代號 (en,jp,kr,th)'
+          type: string
+          format: string
+          example: en
+        vendor_name:
+          description: 商家名稱
+          type: string
+          format: string
+          example: 'Jei De'
+        name:
+          description: 產品名稱
+          type: string
+          format: string
+          example: 'Jei De apple cake'
+        curation_text_top:
+          description: 上標文字
+          type: string
+          format: string
+          example: 'Jei De'
+        curation_text_bottom:
+          description: 下標文字
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+      type: object
+    CurationProductImage:
+      title: 前台-策展-產品版型圖片欄位說明
+      properties:
+        product_id:
+          description: 'The id of the products table'
+          type: integer
+          format: int64
+          example: 1
+        filename:
+          description: 圖片連結
+          type: string
+          format: string
+          example: 'https://dev-cdn.icarry.me/upload/product/photo1_3654_1564738620.png'
+      type: object
+    CurationVendors:
+      title: 前台-策展-品牌版型欄位說明
+      properties:
+        id:
+          description: 'The id of the curation_vendors table'
+          type: integer
+          format: int64
+          example: 1
+        vendor_id:
+          description: 'The id of the vendors table'
+          type: integer
+          format: int64
+          example: 1
+        curation_id:
+          description: 'The id of the curation table'
+          type: integer
+          format: int64
+          example: 1
+        name:
+          description: 商家名稱
+          type: string
+          format: string
+          example: 過海製麵所
+        curation:
+          description: 簡介文字
+          type: string
+          format: string
+          example: 曾拌麵-胡蔴醬香
+        sort:
+          description: 品牌排序
+          type: number
+          format: float
+          example: '1'
+        status:
+          description: '商家狀態 (只會出現 1 啟用, 其餘排除)'
+          type: boolean
+          format: boolean
+          example: '1'
+        langs:
+          description: 語言資料
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationVendorLangs'
+      type: object
+    CurationVendorLangs:
+      title: 前台-策展-品牌版型語言欄位說明
+      properties:
+        vendor_id:
+          description: 'The id of the vendors table'
+          type: integer
+          format: int64
+          example: 1
+        lang:
+          description: '語言代號 (en,jp,kr,th)'
+          type: string
+          format: string
+          example: en
+        name:
+          description: 商家名稱
+          type: string
+          format: string
+          example: 'Jei De'
+        curation:
+          description: 簡介說明
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+      type: object
+    CurationImages:
+      title: 前台-策展-圖片、活動或宮格版型欄位說明
+      properties:
+        id:
+          description: 'The id of the curation_images table'
+          type: integer
+          format: int64
+          example: 1
+        curation_id:
+          description: 'The id of the curation table'
+          type: integer
+          format: int64
+          example: 1
+        style:
+          description: '圖片版型所屬類別(image, block, event, nowordblock)'
+          type: string
+          format: string
+          example: image
+        main_title:
+          description: 大標題
+          type: string
+          format: string
+          example: 最受歡迎的台灣伴手禮品牌
+        show_main_title:
+          description: '大標題顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '1'
+        sub_title:
+          description: 小標題
+          type: string
+          format: string
+          example: 台灣必買十大伴手禮精選
+        show_sub_title:
+          description: '小標題顯示開關, 1:開 0:關'
+          type: boolean
+          format: boolean
+          example: '0'
+        text_position:
+          description: '文字位置, inside 圖片內部, bottom 圖片底部'
+          type: string
+          format: string
+          example: inside
+        url:
+          description: 連結
+          type: string
+          format: string
+          example: 'https://icarry.me'
+        image:
+          description: 策展版型背景圖片
+          type: string
+          format: string
+          example: 'https://dev-cdn.icarry.me/upload/curation/photo_48_1572847556.jpg'
+        sort:
+          description: 圖片排序
+          type: number
+          format: float
+          example: '1'
+        langs:
+          description: '語言資料 (style=nowordblock 不存在)'
+          type: array
+          items:
+            $ref: '#/components/schemas/CurationImageLangs'
+      type: object
+    CurationImageLangs:
+      title: 前台-策展-圖片、活動或宮格版型語言欄位說明
+      properties:
+        curation_image_id:
+          description: 'The id of the curation_images table'
+          type: integer
+          format: int64
+          example: 1
+        lang:
+          description: '語言代號 (en,jp,kr,th)'
+          type: string
+          format: string
+          example: en
+        main_title:
+          description: 大標題
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+        sub_title:
+          description: 小標題
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+      type: object
+    CurationNoWordBlocks:
+      title: 宮格(無字)版型欄位說明
+      properties:
+        id:
+          description: 'The id of the curation_images table'
+          type: integer
+          format: int64
+          example: 1
+        curation_id:
+          description: 'The id of the curation table'
+          type: integer
+          format: int64
+          example: 1
+        style:
+          description: 圖片版型所屬類別(nowordblock)
+          type: string
+          format: string
+          example: image
+        url:
+          description: 連結
+          type: string
+          format: string
+          example: 'https://icarry.me'
+        image:
+          description: 策展版型背景圖片
+          type: string
+          format: string
+          example: 'https://dev-cdn.icarry.me/upload/curation/photo_48_1572847556.jpg'
+        sort:
+          description: 圖片排序
+          type: number
+          format: float
+          example: '1'
+      type: object
+    ProductSuccess:
+      title: 前台-產品清單列表欄位說明
+      properties:
+        message:
+          description: 回應訊息
+          type: string
+          format: string
+          example: success
+        totalCount:
+          description: 資料筆數總計
+          type: integer
+          format: integer
+          example: '10'
+        data:
+          description: 資料內容
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+      type: object
+    Product:
+      title: 前台-產品欄位說明
+      properties:
+        id:
+          description: 'The id of the Products table'
+          type: integer
+          format: int64
+          example: 1
+        langs:
+          description: 商品語言資料
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductLangs'
+        styles:
+          description: '多款商品資料 (model_type = 2 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductStyles'
+        package:
+          description: '組合商品資料 (mode_type = 3 出現)'
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductPackages'
+        vendorLangs:
+          description: 商家語言資料
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductVendorLangs'
+        images:
+          description: 產品圖片資料
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImages'
+      type: object
+    ProductLangs:
+      title: 前台-產品語言欄位說明
+      properties:
+        Product_id:
+          description: 'The id of the Product table'
+          type: integer
+          format: int64
+          example: 1
+        lang:
+          description: '語言代號 (en,jp,kr,th)'
+          type: string
+          format: string
+          example: en
+        name:
+          description: 產品名稱
+          type: string
+          format: string
+          example: 'Prosperity Round Nougat Gift Box'
+        brand:
+          description: 小標題
+          type: string
+          format: string
+          example: 'Lucky Gift'
+        serving_size:
+          description: 包裝內容
+          type: string
+          format: text
+          example: '23~25 pieces/box'
+        unable_buy:
+          description: 無法購買說明
+          type: string
+          format: text
+          example: 'unable ship to your country.'
+        title:
+          description: 產品特色
+          type: string
+          format: text
+          example: 'Enjoy the classic 6 zenique select'
+        intro:
+          description: 產品介紹
+          type: string
+          format: text
+          example: '特別オファー！ 5つのクラシッ'
+        model_name:
+          description: '款式名稱 (多款式產品顯示)'
+          type: string
+          format: text
+          example: color
+        specification:
+          description: 產品規格
+          type: string
+          format: text
+          example: 'html DATA'
+        curation_text_top:
+          description: 上標文字
+          type: string
+          format: string
+          example: 'Jei De'
+        curation_text_bottom:
+          description: 下標文字
+          type: string
+          format: string
+          example: 'Top 10 Brands'
+      type: object
+    ProductStyles:
+      title: 前台-產品-多款商品欄位說明
+      properties:
+        product_model_id:
+          description: 'The id of the product_models table'
+          type: integer
+          format: int64
+          example: 2324
+        name:
+          description: 多款商品名稱
+          type: string
+          format: string
+          example: '鼠來報吉「三星蔥口味/鹹蛋黃口味」雙盒 (32入/2盒)'
+        name_en:
+          description: 多款商品英文名稱
+          type: string
+          format: string
+          example: '鼠來報吉「三星蔥口味/鹹蛋黃口味」雙盒 (32入/2盒)'
+        name_jp:
+          description: 多款商品日文名稱
+          type: string
+          format: string
+          example: '鼠來報吉「三星蔥口味/鹹蛋黃口味」雙盒 (32入/2盒)'
+        name_kr:
+          description: 多款商品韓文名稱
+          type: string
+          format: string
+          example: '鼠來報吉「三星蔥口味/鹹蛋黃口味」雙盒 (32入/2盒)'
+        name_th:
+          description: 多款商品泰文名稱
+          type: string
+          format: string
+          example: '鼠來報吉「三星蔥口味/鹹蛋黃口味」雙盒 (32入/2盒)'
+        sku:
+          description: 商品編號
+          type: string
+          format: string
+          example: EC00410012028
+      type: object
+    ProductPackages:
+      title: 前台-產品-組合商品欄位說明
+      properties:
+        product_model_id:
+          description: 'The id of the product_models table'
+          type: integer
+          format: int64
+          example: 2324
+        name:
+          description: 組合商品名稱
+          type: string
+          format: string
+          example: 榴槤杏仁牛軋糖
+        name_en:
+          description: 組合商品英文名稱
+          type: string
+          format: string
+          example: 榴槤杏仁牛軋糖
+        name_jp:
+          description: 組合商品日文名稱
+          type: string
+          format: string
+          example: 榴槤杏仁牛軋糖
+        name_kr:
+          description: 組合商品韓文名稱
+          type: string
+          format: string
+          example: 榴槤杏仁牛軋糖
+        name_th:
+          description: 組合商品泰文名稱
+          type: string
+          format: string
+          example: 榴槤杏仁牛軋糖
+        sku:
+          description: 商品編號
+          type: string
+          format: string
+          example: BOM005271608772413
+      type: object
+    ProductVendorLangs:
+      title: 前台-產品-商家語言欄位說明
+      properties:
+        vendor_id:
+          description: 'The id of the vendors table'
+          type: integer
+          format: int64
+          example: 1
+        lang:
+          description: '語言代號 (en,jp,kr,th)'
+          type: string
+          format: string
+          example: en
+        name:
+          description: 商家名稱
+          type: string
+          format: string
+          example: 'Jei De'
+        summary:
+          description: 簡介
+          type: string
+          format: text
+          example: 'The bakery''s winning entry ...'
+        description:
+          description: 描述
+          type: string
+          format: longtext
+          example: 'The bakery''s winning entry ...'
+      type: object
+    ProductImages:
+      title: 前台-產品-圖片欄位說明
+      properties:
+        Product_id:
+          description: 'The id of the Products table'
+          type: integer
+          format: int64
+          example: 1
+        image:
+          description: 商品圖片
+          type: string
+          format: string
+          example: 'https://dev-cdn.icarry.me/upload/Product/photo_48_1572847556.jpg'
+        sort:
+          description: 圖片排序
+          type: number
+          format: float
+          example: '1'
+      type: object
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: 'Login to get the authentication token'
+      name: 'Token based Based'
+      in: header
+      bearerFormat: JWT
+      scheme: bearer
+tags:
+  -
+    name: 前台-首頁及分類策展
+    description: 'iCarry 前台 首頁策展及分類策展 API v1'
+  -
+    name: 前台-產品
+    description: 'iCarry 前台 產品資料 API v1'
+  -
+    name: 前台-品牌
+    description: 'iCarry 前台 商家資料 API v1'
+  -
+    name: 前台-使用者
+    description: 'iCarry 前台 使用者 API v1'
+security:
+  - []
