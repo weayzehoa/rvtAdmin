@@ -50,7 +50,7 @@
                                             <label>渠道:</label>
                                             <select class="form-control" id="source" name="source">
                                                 <option value="" {{ !empty($source) && $source == null ? 'selected' : '' }}>全部</option>
-                                                <option value="iCarryWeb" {{ !empty($source) && $source == 'iCarryWeb' ? 'selected' : '' }}>iCarry Web</option>
+                                                <option value="iCarryWeb" {{ !empty($source) && $source == 'iCarryWeb' ? 'selected' : '' }}>Web</option>
                                                 @foreach($sources as $s)
                                                 <option value="{{ $s->source }}" {{ !empty($source) && $s->source == $source ? 'selected' : '' }}>{{ $s->name }}</option>
                                                 @endforeach

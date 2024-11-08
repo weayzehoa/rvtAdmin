@@ -4,7 +4,7 @@
             <a href="{{ url('/') }}" class="nav-link text-primary" target="_blank">前台首頁</a>
         </li>
     </ul> --}}
-    <span class="ml-3">iCarry - 台灣伴手禮，交給「我來寄」後台管理系統 {{ env('APP_VERSION') }}</span>
+    <span class="ml-3">後台管理系統 {{ env('APP_VERSION') }}</span>
     <ul class="navbar-nav ml-auto">
         {{-- SEARCH FORM --}}
         @if(in_array('M5S1',explode(',',Auth::user()->power)))

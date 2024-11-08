@@ -28,7 +28,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5>此功能可透過 iCarry 、各渠道訂單編號撈出已於 iCarry 後台登記的物流公司與物流訂單。</h5>
+                            <h5>此功能可透過 各渠道訂單編號撈出已於 後台登記的物流公司與物流訂單。</h5>
                             <div class="col-4">
                                 <form  id="logisticImportForm" action="{{ url('digiwin/logisticImport') }}" method="POST" enctype="multipart/form-data">
                                 @csrf

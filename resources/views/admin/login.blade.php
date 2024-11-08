@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>iCarry {!! env('APP_ENV') == 'local' ? '測試用' : '' !!}後台管理系統 | 登入</title>
+    <title>{!! env('APP_ENV') == 'local' ? '測試用' : '' !!}後台管理系統 | 登入</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('vendor/Font-Awesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/icheck-bootstrap/icheck-bootstrap.min.css') }}">
@@ -25,7 +25,7 @@
     @include('admin.layouts.alert_message')
     <div class="login-box">
         <div class="login-logo">
-            <a href="javascript:" class="text-yellow"><b>iCarry {!! env('APP_ENV') == 'local' ? '開發團隊測試用<br>' : '' !!}後台管理系統</b></a>
+            <a href="javascript:" class="text-yellow"><b>{!! env('APP_ENV') == 'local' ? '開發團隊測試用<br>' : '' !!}後台管理系統</b></a>
         </div>
         <div class="card">
             <div class="card-body login-card-body">
@@ -33,7 +33,7 @@
                 <form id="loginForm" action="{{ route('admin.login.submit') }}" method="post">
                     @csrf
                     <div class="input-group mb-3">
-                        <input id="account" type="account" placeholder="請輸入帳號" class="form-control {{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" required autofocus>
+                        <input id="account" type="account" placeholder="請輸入帳號，訪客輸入 guest" class="form-control {{ $errors->has('account') ? ' is-invalid' : '' }}" name="account" value="{{ old('account') }}" required autofocus>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -46,7 +46,7 @@
                         @endif
                     </div>
                     <div class="input-group mb-3">
-                        <input id="password" type="password" placeholder="請輸入密碼" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                        <input id="password" type="password" placeholder="請輸入密碼，訪客輸入 guest1688" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
